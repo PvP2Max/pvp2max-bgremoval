@@ -72,6 +72,15 @@ docker run -d --name bgremover -p 3000:3000 --env-file .env bgremover
 - Point your tunnel/reverse proxy at `http://localhost:3000` for `bgremover.pvp2max.com`.  
 - Ensure the container can reach your withoutbg service (`WITHOUTBG_API_URL`).
 
+## Docker Compose (bgremover + withoutbg together)
+1) Copy `.env.example` to `.env` and set `SERVICE_API_TOKEN` plus any optional tokens.  
+2) Run `docker compose up -d`.  
+3) Access the app at `http://localhost:3000` (or via your tunnel). The app will call the bundled `withoutbg` service at `http://withoutbg:5001/api/remove`.
+
+Notes:
+- The compose file uses `withoutbg/withoutbg:latest` and sets `PORT=5001`. If the upstream project publishes a different tag/port, adjust `docker-compose.yml` accordingly.  
+- If your withoutbg build needs its own auth, set `WITHOUTBG_API_TOKEN` in both `.env` and the compose service (commented example in the file).
+
 ## Notes on withoutbg integration
 - The app forwards the uploaded file to your self-hosted `WITHOUTBG_API_URL`; no calls are made to any paid API.  
 - If your withoutbg instance needs its own token, set `WITHOUTBG_API_TOKEN`; it will be sent as `Authorization: Bearer <token>`.  

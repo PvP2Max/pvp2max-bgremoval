@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  withoutbg:
+    image: withoutbg/withoutbg:latest
+    container_name: withoutbg
+    environment:
+      - PORT=5001
+      # Uncomment and set if your withoutbg build expects auth:
+      # - WITHOUTBG_API_TOKEN=change-me
+    ports:
+      - "5001:5001"
+    restart: unless-stopped
+
+  bgremover:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bgremover
+    depends_on:
+      - withoutbg
+    env_file:
+      - .env
+    environment:
+      - WITHOUTBG_API_URL=http://withoutbg:5001/api/remove
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
