@@ -16,6 +16,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_DEFAULT_SERVICE_TOKEN: ${NEXT_PUBLIC_DEFAULT_SERVICE_TOKEN}
     container_name: bgremover
     depends_on:
       - withoutbg
