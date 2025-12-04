@@ -4,8 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 type Stage = "idle" | "processing" | "done";
 
-const defaultServiceToken =
-  process.env.NEXT_PUBLIC_DEFAULT_SERVICE_TOKEN ?? "";
+const serviceToken = process.env.NEXT_PUBLIC_DEFAULT_SERVICE_TOKEN ?? "";
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
@@ -14,7 +13,6 @@ export default function Home() {
   const [status, setStatus] = useState<Stage>("idle");
   const [message, setMessage] = useState("Upload an image to begin");
   const [error, setError] = useState<string | null>(null);
-  const [serviceToken, setServiceToken] = useState(defaultServiceToken);
   const [isDragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -70,11 +68,6 @@ export default function Home() {
       return;
     }
 
-    if (!serviceToken) {
-      setError("Provide the service token to use the internal API");
-      return;
-    }
-
     const formData = new FormData();
     formData.append("file", file);
 
@@ -85,9 +78,11 @@ export default function Home() {
     try {
       const response = await fetch("/api/remove-background", {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${serviceToken}`,
-        },
+        headers: serviceToken
+          ? {
+              Authorization: `Bearer ${serviceToken}`,
+            }
+          : undefined,
         body: formData,
       });
 
@@ -116,7 +111,7 @@ export default function Home() {
     }
   };
 
-  const canProcess = Boolean(file && serviceToken && status !== "processing");
+  const canProcess = Boolean(file && status !== "processing");
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-50">
@@ -128,26 +123,14 @@ export default function Home() {
 
       <div className="relative mx-auto flex max-w-6xl flex-col gap-10 px-6 py-12 sm:px-10">
         <header className="flex flex-col gap-3">
-          <div className="flex items-center gap-3 text-sm uppercase tracking-[0.2em] text-cyan-200/80">
-            <span className="h-px w-10 bg-cyan-200/60" />
-            Arctic Aura Designs
-            <span className="h-px flex-1 bg-cyan-200/60" />
-          </div>
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div className="space-y-2">
-              <p className="text-sm text-slate-300">
-                Self-hosted, tunnel ready · bgremover.pvp2max.com
-              </p>
               <h1 className="text-4xl font-semibold leading-tight sm:text-5xl">
                 Background removal built on withoutbg
               </h1>
               <p className="max-w-3xl text-lg text-slate-300">
-                Upload an image, send it through the protected /api pipeline,
-                and deliver a clean cutout for internal teams or other apps.
+                Upload an image to get started.
               </p>
-            </div>
-            <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 backdrop-blur">
-              Token-protected API · Bun + Next.js
             </div>
           </div>
         </header>
@@ -231,27 +214,6 @@ export default function Home() {
               )}
             </label>
 
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <p className="text-sm text-slate-300">Service token</p>
-                <input
-                  value={serviceToken}
-                  onChange={(event) => setServiceToken(event.target.value)}
-                  placeholder="Required for /api access"
-                  className="w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-sm text-slate-50 outline-none ring-1 ring-transparent transition focus:border-cyan-300/60 focus:ring-cyan-500/30"
-                />
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm text-slate-300">API endpoint</p>
-                <div className="rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-slate-100">
-                  POST /api/remove-background
-                  <p className="text-xs text-slate-400">
-                    Proxies to WITHOUTBG_API_URL with optional token
-                  </p>
-                </div>
-              </div>
-            </div>
-
             <div className="mt-5 flex flex-wrap gap-3">
               <button
                 type="button"
@@ -285,8 +247,7 @@ export default function Home() {
                 <p className="text-rose-200">{error}</p>
               ) : (
                 <p className="text-slate-400">
-                  Uses the secured tunnel at bgremover.pvp2max.com with Bun
-                  runtime.
+                  Background removal runs through the internal pipeline.
                 </p>
               )}
             </div>
@@ -334,33 +295,6 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur">
-              <h3 className="text-lg font-semibold">Pipeline notes</h3>
-              <ul className="mt-3 space-y-2 text-sm text-slate-200">
-                <li className="flex gap-2">
-                  <span className="mt-1 h-2 w-2 rounded-full bg-emerald-400" />
-                  Self-hosted withoutbg endpoint is set via
-                  <span className="font-mono text-cyan-200">
-                    WITHOUTBG_API_URL
-                  </span>
-                  .
-                </li>
-                <li className="flex gap-2">
-                  <span className="mt-1 h-2 w-2 rounded-full bg-emerald-400" />
-                  Clients must send
-                  <span className="font-mono text-cyan-200">
-                    Authorization: Bearer &lt;SERVICE_API_TOKEN&gt;
-                  </span>
-                  .
-                </li>
-                <li className="flex gap-2">
-                  <span className="mt-1 h-2 w-2 rounded-full bg-emerald-400" />
-                  Responses return base64 + content type so apps can embed or
-                  download immediately.
-                </li>
-              </ul>
             </div>
           </section>
         </div>

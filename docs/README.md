@@ -9,7 +9,7 @@ Modern, token-protected background removal UI and API for Arctic Aura Designs. T
 - withoutbg as the background removal engine (external service)
 
 ## Project structure
-- `src/app/page.tsx` – UI flow (upload, token entry, status, previews)
+- `src/app/page.tsx` – UI flow (upload, status, previews)
 - `src/app/api/remove-background/route.ts` – Token-guarded proxy to withoutbg
 - `Dockerfile` / `.dockerignore` – Container build for Linux/tunnel host
 - `.env.example` – Required configuration
@@ -25,8 +25,8 @@ Copy `.env.example` to `.env` and fill in the values:
 
 ```
 SERVICE_API_TOKEN=your-shared-secret               # required for /api access
-    WITHOUTBG_API_URL=http://withoutbg:5001/api/remove # your self-hosted withoutbg endpoint
-    WITHOUTBG_API_TOKEN=                               # optional if your self-hosted service enforces auth
+WITHOUTBG_API_URL=http://withoutbg:5001/api/remove # your self-hosted withoutbg endpoint
+WITHOUTBG_API_TOKEN=                               # optional if your self-hosted service enforces auth
 NEXT_PUBLIC_DEFAULT_SERVICE_TOKEN=                 # optional convenience for the UI
 NEXT_PUBLIC_SITE_URL=https://bgremover.pvp2max.com # used in docs/logging if needed
 ```
@@ -58,10 +58,9 @@ curl -X POST http://localhost:3000/api/remove-background \
 
 ## UI flow
 1) Open the app (e.g., `https://bgremover.pvp2max.com`).  
-2) Enter the service token (or pre-fill via `NEXT_PUBLIC_DEFAULT_SERVICE_TOKEN`).  
-3) Drop or browse an image.  
-4) Click **Remove background** to send it through withoutbg.  
-5) Compare before/after previews and download the processed PNG.
+2) Drop or browse an image.  
+3) Click **Remove background** to send it through withoutbg.  
+4) Compare before/after previews and download the processed PNG.
 
 ## Docker deploy (recommended for the tunnel host)
 ```
@@ -78,7 +77,7 @@ docker run -d --name bgremover -p 3000:3000 --env-file .env bgremover
 3) Access the app at `http://localhost:3000` (or via your tunnel). The app will call the bundled `withoutbg` service at `http://withoutbg:5001/api/remove`.
 
 Notes:
-- The compose file uses `withoutbg/withoutbg:latest` and sets `PORT=5001`. If the upstream project publishes a different tag/port, adjust `docker-compose.yml` accordingly.  
+- The compose file uses `withoutbg/app:latest` and sets `PORT=5001`. If the upstream project publishes a different tag/port, adjust `docker-compose.yml` accordingly.  
 - If your withoutbg build needs its own auth, set `WITHOUTBG_API_TOKEN` in both `.env` and the compose service (commented example in the file).
 
 ## Notes on withoutbg integration
