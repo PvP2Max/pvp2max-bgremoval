@@ -123,10 +123,15 @@ export default function Home() {
 
       <div className="relative mx-auto flex max-w-6xl flex-col gap-10 px-6 py-12 sm:px-10">
         <header className="flex flex-col gap-3">
+          <div className="flex items-center gap-3 text-sm uppercase tracking-[0.2em] text-cyan-200/80">
+            <span className="h-px w-10 bg-cyan-200/60" />
+            Arctic Aura Designs
+            <span className="h-px flex-1 bg-cyan-200/60" />
+          </div>
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div className="space-y-2">
               <h1 className="text-4xl font-semibold leading-tight sm:text-5xl">
-                Background removal built on withoutbg
+                Background Removal Tool
               </h1>
               <p className="max-w-3xl text-lg text-slate-300">
                 Upload an image to get started.
