@@ -1,8 +1,6 @@
-version: "3.9"
-
 services:
   withoutbg:
-    image: withoutbg/withoutbg:latest
+    image: ghcr.io/withoutbg/withoutbg:latest
     container_name: withoutbg
     environment:
       - PORT=5001
