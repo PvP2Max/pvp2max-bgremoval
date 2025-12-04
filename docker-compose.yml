@@ -11,6 +11,8 @@ services:
     ports:
       - "5001:5001"
     restart: unless-stopped
+    networks:
+      - apps-net
 
   bgremover:
     build:
@@ -26,3 +28,9 @@ services:
     ports:
       - "3000:3000"
     restart: unless-stopped
+    networks:
+      - apps-net
+
+networks:
+  apps-net:
+    external: true
