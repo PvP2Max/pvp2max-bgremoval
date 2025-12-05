@@ -25,7 +25,7 @@ Copy `.env.example` to `.env` and fill in the values:
 
 ```
 SERVICE_API_TOKEN=your-shared-secret               # required for /api access
-WITHOUTBG_API_URL=http://withoutbg/api/remove      # your self-hosted withoutbg endpoint (container port 80)
+WITHOUTBG_API_URL=http://withoutbg/api/remove-bg   # your self-hosted withoutbg endpoint (container port 80)
 WITHOUTBG_API_TOKEN=                               # optional if your self-hosted service enforces auth
 NEXT_PUBLIC_DEFAULT_SERVICE_TOKEN=                 # optional convenience for the UI
 NEXT_PUBLIC_SITE_URL=https://bgremover.pvp2max.com # used in docs/logging if needed
@@ -74,7 +74,7 @@ docker run -d --name bgremover -p 3000:3000 --env-file .env bgremover
 ## Docker Compose (bgremover + withoutbg together)
 1) Copy `.env.example` to `.env` and set `SERVICE_API_TOKEN` plus any optional tokens.  
 2) Run `docker compose up -d`.  
-3) Access the app at `http://localhost:3000` (or via your tunnel). The app will call the bundled `withoutbg` service at `http://withoutbg:5001/api/remove`.
+3) Access the app at `http://localhost:3000` (or via your tunnel). The app will call the bundled `withoutbg` service at `http://withoutbg/api/remove-bg`.
 
 Notes:
 - The compose file uses `withoutbg/app:latest` and maps host `5001` to container `80`. If the upstream project publishes a different tag/port, adjust `docker-compose.yml` accordingly.  
