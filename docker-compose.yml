@@ -24,7 +24,7 @@ services:
     env_file:
       - .env
     environment:
-      - WITHOUTBG_API_URL=http://withoutbg:5001/api/remove
+      - WITHOUTBG_API_URL=http://withoutbg/api/remove
     ports:
       - "3000:3000"
     restart: unless-stopped
